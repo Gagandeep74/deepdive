@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deep Dive — Multi-Agent AI Research & Report Generation System">
+    <title>Deep Dive — AI Research</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header" id="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="14" cy="14" r="12" stroke="url(#logo-grad)" stroke-width="2"/>
+                            <circle cx="14" cy="8" r="2.5" fill="url(#logo-grad)"/>
+                            <circle cx="8" cy="18" r="2.5" fill="url(#logo-grad)"/>
+                            <circle cx="20" cy="18" r="2.5" fill="url(#logo-grad)"/>
+                            <line x1="14" y1="10.5" x2="8" y2="15.5" stroke="url(#logo-grad)" stroke-width="1.5"/>
+                            <line x1="14" y1="10.5" x2="20" y2="15.5" stroke="url(#logo-grad)" stroke-width="1.5"/>
+                            <line x1="8" y1="18" x2="20" y2="18" stroke="url(#logo-grad)" stroke-width="1.5" stroke-dasharray="2 2"/>
+                            <defs>
+                                <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28">
+                                    <stop stop-color="#6366f1"/>
+                                    <stop offset="1" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h1>Deep Dive</h1>
+                </div>
+                <div class="header-actions">
+                    <span class="header-tag">Multi-Agent Research</span>
+                    <button id="theme-toggle" class="icon-btn" title="Toggle Light/Dark Mode">
+                        🌓
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Sidebar (History) -->
+            <aside class="sidebar" id="history-sidebar">
+                <div class="sidebar-header">
+                    <h3>Research History</h3>
+                </div>
+                <div class="sidebar-content" id="history-list">
+                    <!-- History items injected here -->
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main">
+                <!-- Input Section -->
+                <section class="input-section" id="input-section">
+                    <div class="input-card">
+                        <div class="options-row">
+                            <div class="selector-group">
+                                <label for="provider-select" class="input-label">Compute Node</label>
+                                <select id="provider-select" class="provider-select">
+                                    <option value="fireworks">Fireworks AI (Standard)</option>
+                                    <option value="amd_cloud">AMD MI300X (Heavy Compute)</option>
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label for="depth-select" class="input-label">Research Depth</label>
+                                <select id="depth-select" class="provider-select">
+                                    <option value="quick">Quick (2 agents)</option>
+                                    <option value="standard" selected>Standard (5 agents)</option>
+                                    <option value="deep">Deep Dive (10 agents)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label for="topic-input" class="input-label" style="margin-top: 1.5rem;">Research Topic</label>
+                        <div class="input-row">
+                            <input
+                                type="text"
+                                id="topic-input"
+                                class="topic-input"
+                                placeholder="e.g., Impact of quantum computing on modern cryptography"
+                                autocomplete="off"
+                            >
+                            <button id="start-btn" class="start-btn" onclick="startResearch()">
+                                <svg class="btn-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 9h12M11 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Start Research</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Status Panel -->
+                <section class="status-section hidden" id="status-section">
+                    <h2 class="section-title">Agent Pipeline</h2>
+                    <div class="agents-grid" id="agents-grid">
+                        <!-- Planner -->
+                        <div class="agent-card" id="agent-planner" data-state="idle">
+                            <div class="agent-header">
+                                <div class="agent-indicator"></div>
+                                <span class="agent-name">Planner</span>
+                                <span class="agent-badge" id="badge-planner"></span>
+                            </div>
+                            <div class="agent-status" id="status-planner">Idle</div>
+                            <div class="agent-detail" id="detail-planner"></div>
+                        </div>
+
+                        <!-- Researchers -->
+                        <div class="agent-card agent-card-wide" id="agent-researchers" data-state="idle">
+                            <div class="agent-header">
+                                <div class="agent-indicator"></div>
+                                <span class="agent-name">Researchers</span>
+                                <span class="agent-badge" id="badge-researcher"></span>
+                            </div>
+                            <div class="agent-status" id="status-researchers">Idle</div>
+                            <div class="researcher-chips" id="researcher-chips"></div>
+                        </div>
+
+                        <!-- Synthesizer -->
+                        <div class="agent-card" id="agent-synthesizer" data-state="idle">
+                            <div class="agent-header">
+                                <div class="agent-indicator"></div>
+                                <span class="agent-name">Synthesizer</span>
+                                <span class="agent-badge" id="badge-synthesizer"></span>
+                            </div>
+                            <div class="agent-status" id="status-synthesizer">Idle</div>
+                            <div class="agent-detail" id="detail-synthesizer"></div>
+                        </div>
+
+                        <!-- Critic -->
+                        <div class="agent-card" id="agent-critic" data-state="idle">
+                            <div class="agent-header">
+                                <div class="agent-indicator"></div>
+                                <span class="agent-name">Critic</span>
+                                <span class="agent-badge" id="badge-critic"></span>
+                            </div>
+                            <div class="agent-status" id="status-critic">Idle</div>
+                            <div class="agent-detail" id="detail-critic"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Report Section -->
+                <section class="report-section hidden" id="report-section">
+                    <div class="report-header">
+                        <h2 class="section-title">Research Report</h2>
+                        <div class="report-actions">
+                            <button class="action-btn" onclick="copyReport()">Copy</button>
+                            <button class="action-btn" onclick="exportMarkdown()">Export .md</button>
+                            <button class="action-btn" onclick="window.print()">Print PDF</button>
+                        </div>
+                    </div>
+                    <div class="report-providers" id="report-providers"></div>
+                    <article class="report-content" id="report-content"></article>
+                </section>
+
+                <!-- Error Display -->
+                <section class="error-section hidden" id="error-section">
+                    <div class="error-card">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2"/>
+                            <line x1="12" y1="8" x2="12" y2="13" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="12" cy="16" r="1" fill="#ef4444"/>
+                        </svg>
+                        <span id="error-message">An error occurred</span>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>Built for AMD AI Hackathon</span>
+            <span class="footer-sep">·</span>
+            <span>Powered by CrewAI + Fireworks AI</span>
+        </footer>
+    </div>
+
+    <!-- Modal for Raw Notes -->
+    <div id="notes-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Raw Research Notes</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre id="modal-text"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js?v=2"></script>
+</body>
+</html>
