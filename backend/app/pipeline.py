@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # Public API
 # ---------------------------------------------------------------------------
 
-async def run_pipeline(topic: str, depth: str, queue: asyncio.Queue, synthesis_provider: str = "fireworks") -> None:
+async def run_pipeline(topic: str, depth: str, queue: asyncio.Queue, synthesis_provider: str = "fireworks", user_id: str = None) -> None:
     """Execute the full research pipeline for *topic*.
 
     Progress events are pushed onto *queue* as dicts with the shape::
@@ -212,7 +212,7 @@ async def run_pipeline(topic: str, depth: str, queue: asyncio.Queue, synthesis_p
 
         # Save to database
         try:
-            await asyncio.to_thread(save_report, topic, depth, "complete", report, research_results)
+            await asyncio.to_thread(save_report, topic, depth, "complete", report, research_results, user_id)
         except Exception as e:
             logger.error("Failed to save report to database: %s", e)
 

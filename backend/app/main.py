@@ -94,8 +94,10 @@ async def research(request: Request) -> EventSourceResponse:
     logger.info("Starting research pipeline for topic: %s", topic)
     logger.info("Using synthesis_provider=%s", synthesis_provider)
 
+    user_id: str = request.headers.get("X-User-Id", "")
+
     queue: asyncio.Queue[dict | None] = asyncio.Queue()
-    asyncio.create_task(run_pipeline(topic, depth, queue, synthesis_provider))
+    asyncio.create_task(run_pipeline(topic, depth, queue, synthesis_provider, user_id=user_id))
 
     return EventSourceResponse(
         content=_event_stream(request, queue),
@@ -167,14 +169,16 @@ async def health() -> dict[str, str]:
     return {"status": "healthy"}
 
 @app.get("/history")
-async def list_history():
+async def list_history(request: Request):
     """List past research reports."""
-    return get_history()
+    user_id = request.headers.get("X-User-Id", "")
+    return get_history(user_id=user_id)
 
 @app.get("/history/{report_id}")
-async def fetch_report(report_id: str):
+async def fetch_report(report_id: str, request: Request):
     """Fetch a specific report and its raw data."""
-    report = get_report(report_id)
+    user_id = request.headers.get("X-User-Id", "")
+    report = get_report(report_id, user_id=user_id)
     if not report:
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Report not found")
@@ -187,7 +191,7 @@ async def fetch_report(report_id: str):
 _this_dir = Path(__file__).resolve().parent
 
 # Development: frontend lives alongside backend in the repo.
-_frontend_dir = _this_dir.parent.parent / "frontend"
+_frontend_dir = _this_dir.parent.parent / "frontend" / "dist"
 
 # Docker / production: frontend assets copied into /app/static/
 # (since WORKDIR is /app, _this_dir is /app/app, so parent is /app)
@@ -199,6 +203,16 @@ if _frontend_dir.is_dir():
 elif _static_dir.is_dir():
     logger.info("Mounting static files from %s", _static_dir)
     app.mount("/", StaticFiles(directory=str(_static_dir), html=True), name="static")
+
+# Special Catch-All for React Router
+from fastapi.responses import FileResponse
+@app.exception_handler(404)
+async def custom_404_handler(request, __):
+    if _frontend_dir.is_dir():
+        return FileResponse(str(_frontend_dir / "index.html"))
+    elif _static_dir.is_dir():
+        return FileResponse(str(_static_dir / "index.html"))
+    return FileResponse("Not Found", status_code=404)
 
 
 # ---------------------------------------------------------------------------
