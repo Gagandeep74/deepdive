@@ -1,5 +1,6 @@
 /* ============================================================
    Deep Dive — Frontend Application Logic
+   Visual redesign v3 — all API/SSE logic unchanged
    ============================================================ */
 
 const API_BASE = window.location.origin;
@@ -18,6 +19,7 @@ const reportProviders = document.getElementById('report-providers');
 const researcherChips = document.getElementById('researcher-chips');
 const themeToggle     = document.getElementById('theme-toggle');
 const historyList     = document.getElementById('history-list');
+const researcherCounter = document.getElementById('researcher-counter');
 
 const modal           = document.getElementById('notes-modal');
 const modalTitle      = document.getElementById('modal-title');
@@ -26,11 +28,12 @@ const modalText       = document.getElementById('modal-text');
 let isRunning = false;
 let currentMarkdown = "";
 let currentResearchResults = [];
+let totalResearchers = 0;
+let doneResearchers = 0;
 
 // ---- Initialization ----
 document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
-    // Check saved theme
     if (localStorage.getItem('theme') === 'light') {
         document.documentElement.classList.add('light-theme');
     }
@@ -55,6 +58,8 @@ function startResearch() {
     startBtn.querySelector('span').textContent = 'Running…';
     currentMarkdown = "";
     currentResearchResults = [];
+    totalResearchers = 0;
+    doneResearchers = 0;
     reportContent.innerHTML = "";
     reportProviders.innerHTML = "";
 
@@ -94,7 +99,7 @@ async function streamResearch(topic, provider, depth) {
 
             buffer += decoder.decode(value, { stream: true });
             const messages = buffer.split(/\r?\n\r?\n/);
-            buffer = messages.pop(); // Keep incomplete message
+            buffer = messages.pop();
 
             for (const msg of messages) {
                 if (msg.trim()) processSSEMessage(msg);
@@ -105,7 +110,7 @@ async function streamResearch(topic, provider, depth) {
         showError(err.message || 'Connection failed');
     } finally {
         finishRun();
-        loadHistory(); // refresh history when done
+        loadHistory();
     }
 }
 
@@ -141,6 +146,8 @@ function handleStatus(data) {
             setAgentState('planner', 'done', 'Done');
             if (sub_questions) {
                 setAgentDetail('planner', `${sub_questions.length} sub-questions generated`);
+                totalResearchers = sub_questions.length;
+                doneResearchers = 0;
                 createResearcherChips(sub_questions);
             }
         }
@@ -148,13 +155,16 @@ function handleStatus(data) {
 
     if (agent && agent.startsWith('researcher_')) {
         const idx = parseInt(agent.split('_')[1], 10);
-        setAgentState('researchers', 'active', `Researching… (${idx} active)`);
+        setAgentState('researchers', 'active', `Researching…`);
+        updateResearcherCounter();
         const chip = document.querySelector(`.researcher-chip[data-idx="${idx}"]`);
         if (chip) chip.dataset.state = 'active';
     }
 
     if (agent === 'researchers' && state === 'done') {
+        doneResearchers = totalResearchers;
         setAgentState('researchers', 'done', `Done — ${count} results`);
+        updateResearcherCounter();
         document.querySelectorAll('.researcher-chip').forEach(c => c.dataset.state = 'done');
         if (results) currentResearchResults = results;
     }
@@ -198,13 +208,11 @@ async function handleReport(data) {
         reportProviders.appendChild(tag);
     }
 
-    // Typing effect for the final report
     currentMarkdown = data.markdown;
     let buffer = "";
     const charArray = currentMarkdown.split('');
     reportContent.innerHTML = "";
-    
-    // Parse citations [1], [2] into clickable anchors
+
     marked.use({
         renderer: {
             text(text) {
@@ -215,7 +223,7 @@ async function handleReport(data) {
 
     for (let i = 0; i < charArray.length; i++) {
         buffer += charArray[i];
-        if (i % 3 === 0 || i === charArray.length - 1) { // chunking speeds it up
+        if (i % 3 === 0 || i === charArray.length - 1) {
             reportContent.innerHTML = marked.parse(buffer);
             await new Promise(r => setTimeout(r, 1));
         }
@@ -230,14 +238,33 @@ function createResearcherChips(questions) {
         chip.className = 'researcher-chip';
         chip.dataset.idx = idx + 1;
         chip.dataset.state = 'idle';
-        chip.textContent = `#${idx + 1}: ${q}`;
+
+        // Mini pulse dot
+        const dot = document.createElement('span');
+        dot.className = 'chip-dot';
+        chip.appendChild(dot);
+
+        const text = document.createTextNode(`#${idx + 1}: ${q}`);
+        chip.appendChild(text);
         chip.title = q;
-        
-        // Interactive modal click
+
         chip.onclick = () => showRawNotes(idx);
-        
+
         researcherChips.appendChild(chip);
     });
+}
+
+function updateResearcherCounter() {
+    if (!researcherCounter) return;
+    const activeCount = document.querySelectorAll('.researcher-chip[data-state="active"]').length;
+    const doneCount = document.querySelectorAll('.researcher-chip[data-state="done"]').length;
+
+    if (totalResearchers > 0) {
+        researcherCounter.textContent = `${doneCount} / ${totalResearchers} complete`;
+        researcherCounter.classList.add('visible');
+    } else {
+        researcherCounter.classList.remove('visible');
+    }
 }
 
 function showRawNotes(index) {
@@ -255,7 +282,6 @@ function closeModal() {
     modal.classList.add('hidden');
 }
 
-// Close modal on outside click
 modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
 });
@@ -278,12 +304,16 @@ function resetStatus() {
         setAgentDetail(a, '');
     });
     researcherChips.innerHTML = '';
+    if (researcherCounter) {
+        researcherCounter.textContent = '';
+        researcherCounter.classList.remove('visible');
+    }
 }
 
 function finishRun() {
     isRunning = false;
     startBtn.disabled = false;
-    startBtn.querySelector('span').textContent = 'Start Research';
+    startBtn.querySelector('span').textContent = 'Run';
 }
 
 function showError(msg) {
@@ -341,15 +371,14 @@ async function openHistoricalReport(id) {
     try {
         const res = await fetch(`${API_BASE}/history/${id}`);
         const report = await res.json();
-        
+
         topicInput.value = report.topic;
         depthSelect.value = report.depth;
         currentResearchResults = report.research_raw_data || [];
-        
-        // Render instantly without typing effect
+
         currentMarkdown = report.report_markdown;
         reportContent.innerHTML = marked.parse(currentMarkdown);
-        
+
         statusSection.classList.add('hidden');
         reportSection.classList.remove('hidden');
         errorSection.classList.add('hidden');
