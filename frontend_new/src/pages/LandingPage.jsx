@@ -100,7 +100,7 @@ const LandingPage = () => {
       </div>
 
       {/* 3D AGENT SWARM CENTERPIECE */}
-      <div className="reveal" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
         <Suspense fallback={
           <div style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', margin: '40px auto 80px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 1.5s infinite', boxShadow: '0 0 20px var(--accent-glow)' }}></div>
