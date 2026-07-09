@@ -1,7 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useMouseTilt } from '../hooks/useMouseTilt';
 
 // Reusable animated section component
 const RevealSection = ({ children, style, className }) => {
@@ -32,6 +32,7 @@ const FeatureCard = ({ title, desc, delay, iconColor, icon }) => {
 const LandingPage = () => {
   const { session } = useAuth();
   const heroReveal = useScrollReveal();
+  const tiltRef = useMouseTilt({ max: 15, perspective: 1200, scale: 1.02 });
 
   return (
     <div style={{ padding: '40px 0' }}>
@@ -65,39 +66,20 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* 3D EDITOR MOCKUP */}
-      <div className="editor-perspective-container reveal">
-        <div className="editor-mockup">
-          <div className="editor-header">
-            <div className="editor-dots">
-              <div className="editor-dot r"></div>
-              <div className="editor-dot y"></div>
-              <div className="editor-dot g"></div>
-            </div>
-            <div className="editor-title">agent_crew.py - Visual Studio Code</div>
-            <div style={{ width: '42px' }}></div>
-          </div>
-          <div className="editor-body">
-            <div className="editor-lines">
-              1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13
-            </div>
-            <div className="editor-code">
-              <span className="token-comment"># Initialize the multi-agent research crew</span><br/>
-              <span className="token-keyword">from</span> crewai <span className="token-keyword">import</span> Agent, Crew, Process<br/><br/>
-              
-              <span className="token-comment"># Define specialized agents</span><br/>
-              <span className="token-variable">planner</span> <span className="token-punctuation">=</span> <span className="token-function">Agent</span>(<br/>
-              &nbsp;&nbsp;role<span className="token-punctuation">=</span><span className="token-string">"Research Planner"</span>,<br/>
-              &nbsp;&nbsp;goal<span className="token-punctuation">=</span><span className="token-string">"Break down topics into sub-tasks"</span>,<br/>
-              &nbsp;&nbsp;backstory<span className="token-punctuation">=</span><span className="token-string">"Expert strategist mapping out investigations."</span><br/>
-              )<br/><br/>
-              
-              <span className="token-variable">research_crew</span> <span className="token-punctuation">=</span> <span className="token-function">Crew</span>(<br/>
-              &nbsp;&nbsp;agents<span className="token-punctuation">=</span>[planner, researcher, synthesizer, critic],<br/>
-              &nbsp;&nbsp;process<span className="token-punctuation">=</span>Process.hierarchical<br/>
-              )
-            </div>
-          </div>
+      {/* INTERACTIVE 3D IMAGE MOCKUP */}
+      <div className="reveal" style={{ display: 'flex', justifyContent: 'center', margin: '60px auto 120px', padding: '0 20px', width: '100%', maxWidth: '1000px' }}>
+        <div ref={tiltRef} style={{ width: '100%', cursor: 'pointer', transformStyle: 'preserve-3d' }}>
+          <img 
+            src="https://skillvedanth.com/wp-content/uploads/2026/03/vsc.png" 
+            alt="Dashboard Editor Mockup" 
+            style={{ 
+              width: '100%', 
+              height: 'auto', 
+              borderRadius: '16px', 
+              boxShadow: '0 30px 60px -10px rgba(0,0,0,0.8), 0 0 40px rgba(108,92,231,0.15)',
+              display: 'block'
+            }} 
+          />
         </div>
       </div>
 
