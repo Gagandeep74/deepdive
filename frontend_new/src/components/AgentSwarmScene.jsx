@@ -19,6 +19,20 @@ const useIsTouchDevice = () => {
   return isTouch;
 };
 
+// Hook to detect light mode
+const useIsLightMode = () => {
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.classList.contains('light-theme'));
+    });
+    setIsLight(document.documentElement.classList.contains('light-theme'));
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+  return isLight;
+};
+
 // Hook to detect reduced motion
 const usePrefersReducedMotion = () => {
   const [prefersReduced, setPrefersReduced] = useState(false);
@@ -227,8 +241,20 @@ const SceneContainer = () => {
 };
 
 export default function AgentSwarmScene() {
+  const isLightMode = useIsLightMode();
+  
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
+    <div style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      width: '100vw', 
+      height: '100vh', 
+      zIndex: 0, 
+      pointerEvents: 'none',
+      opacity: isLightMode ? 0.15 : 1,
+      transition: 'opacity 0.5s ease-in-out'
+    }}>
       {/* Remove manual background color so it perfectly composites over the DOM starfield */}
       <Canvas eventSource={document.body} eventPrefix="client" camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <SceneContainer />
