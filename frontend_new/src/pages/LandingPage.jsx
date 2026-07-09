@@ -43,6 +43,14 @@ const LandingPage = () => {
       {/* Site-wide Ambient Starfield Background */}
       <Starfield />
 
+      {/* 3D AGENT SWARM BACKGROUND */}
+      <Suspense fallback={null}>
+        <AgentSwarmScene />
+      </Suspense>
+
+      {/* Foreground Content Wrapper */}
+      <div style={{ position: 'relative', zIndex: 10 }}>
+
       {/* Decorative SVG Connectors */}
       <svg className="ambient-svg ambient-svg-1 hidden md:block" style={{ top: '25%', left: '5%', width: '300px', height: '300px' }} viewBox="0 0 200 200">
         <path d="M 10 190 Q 50 10 190 10" fill="none" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="5,5" />
@@ -99,17 +107,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* 3D AGENT SWARM CENTERPIECE */}
-      <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
-        <Suspense fallback={
-          <div style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', margin: '40px auto 80px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 1.5s infinite', boxShadow: '0 0 20px var(--accent-glow)' }}></div>
-            <p style={{ color: 'var(--text-3)', fontSize: '0.9rem', marginTop: '16px' }}>Loading Orchestration Visuals...</p>
-          </div>
-        }>
-          <AgentSwarmScene />
-        </Suspense>
-      </div>
+
 
       {/* DOMAIN GRID */}
       <RevealSection style={{ maxWidth: '1000px', margin: '120px auto', padding: '0 24px' }}>
@@ -233,6 +231,7 @@ const LandingPage = () => {
           box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 40px -20px var(--glass-glow);
         }
       `}</style>
+      </div> {/* End Foreground Content Wrapper */}
     </div>
   );
 };

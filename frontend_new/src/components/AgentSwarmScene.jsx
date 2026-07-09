@@ -228,9 +228,9 @@ const SceneContainer = () => {
 
 export default function AgentSwarmScene() {
   return (
-    <div style={{ width: '100%', height: '500px', margin: '40px auto 80px', position: 'relative', zIndex: 10 }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
       {/* Remove manual background color so it perfectly composites over the DOM starfield */}
-      <Canvas camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
+      <Canvas eventSource={document.body} eventPrefix="client" camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <SceneContainer />
       </Canvas>
     </div>
