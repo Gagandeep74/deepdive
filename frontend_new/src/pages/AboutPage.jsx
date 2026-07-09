@@ -21,13 +21,17 @@ const AboutPage = () => {
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
         <div className="glass-panel" style={{ padding: '24px', textAlign: 'center' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--glass-border)', margin: '0 auto 16px' }}></div>
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.1rem', marginBottom: '4px' }}>Team Member 1</h3>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--glass-border)', margin: '0 auto 16px', overflow: 'hidden', border: '2px solid var(--accent-glow)' }}>
+            <img src="/gagandeep.png" alt="Gagandeep Singh" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '4px' }}>Gagandeep Singh</h3>
           <p style={{ color: 'var(--text-3)', fontSize: '0.9rem' }}>Full Stack Engineer</p>
         </div>
         <div className="glass-panel" style={{ padding: '24px', textAlign: 'center' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--glass-border)', margin: '0 auto 16px' }}></div>
-          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.1rem', marginBottom: '4px' }}>Team Member 2</h3>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--glass-border)', margin: '0 auto 16px', overflow: 'hidden', border: '2px solid rgba(6, 182, 212, 0.3)' }}>
+            <img src="/mayuresh.png" alt="Mayuresh Gupta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+          <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '4px' }}>Mayuresh Gupta</h3>
           <p style={{ color: 'var(--text-3)', fontSize: '0.9rem' }}>AI Researcher</p>
         </div>
       </div>

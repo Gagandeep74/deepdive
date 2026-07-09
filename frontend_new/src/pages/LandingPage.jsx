@@ -38,7 +38,7 @@ const LandingPage = () => {
   const heroReveal = useScrollReveal();
 
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col relative overflow-hidden bg-[#0A0A0F]">
+    <div className="min-h-screen text-slate-100 flex flex-col relative overflow-hidden">
       
       {/* Site-wide Ambient Starfield Background */}
       <Starfield />
