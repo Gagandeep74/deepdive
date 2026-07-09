@@ -67,7 +67,7 @@ const GlowSprite = ({ color, scale = 1, opacity = 0.5 }) => {
         color={color} 
         transparent 
         opacity={opacity} 
-        blending={THREE.AdditiveBlending} 
+        opacity={opacity} 
         depthWrite={false} 
       />
     </mesh>
@@ -140,13 +140,13 @@ const OrbitingNode = ({ color, radius, speed, offset, reducedMotion, name }) => 
         </Sphere>
         {/* Wireframe outer shell */}
         <Icosahedron args={[0.35, 1]}>
-          <meshBasicMaterial color={color} wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={color} wireframe transparent opacity={0.5} />
         </Icosahedron>
       </group>
       
       {/* Agent Name Label */}
       <Html position={[0, -0.7, 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-        <div style={{ color: color, fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold', textShadow: `0 0 10px ${color}, 0 0 20px ${color}`, letterSpacing: '1px', textTransform: 'uppercase' }}>
+        <div style={{ color: color, background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold', textShadow: `0 0 10px ${color}, 0 0 20px ${color}`, letterSpacing: '1px', textTransform: 'uppercase' }}>
           {name}
         </div>
       </Html>
@@ -185,7 +185,7 @@ const SceneContainer = () => {
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
         {/* Outer Wireframe */}
         <Icosahedron args={[1.5, 2]}>
-          <meshBasicMaterial color="#6c5ce7" wireframe transparent opacity={0.2} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color="#6c5ce7" wireframe transparent opacity={0.2} />
         </Icosahedron>
         
         {/* Inner Solid */}
@@ -198,10 +198,10 @@ const SceneContainer = () => {
 
         {/* Tech Rings */}
         <Torus args={[2.2, 0.01, 32, 64]} rotation={[Math.PI / 2, 0, 0]}>
-          <meshBasicMaterial color="#a78bfa" transparent opacity={0.15} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color="#a78bfa" transparent opacity={0.15} />
         </Torus>
         <Torus args={[2.8, 0.01, 32, 64]} rotation={[0, Math.PI / 4, 0]}>
-          <meshBasicMaterial color="#06b6d4" transparent opacity={0.15} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color="#06b6d4" transparent opacity={0.15} />
         </Torus>
       </Float>
 
@@ -222,10 +222,8 @@ const SceneContainer = () => {
 export default function AgentSwarmScene() {
   return (
     <div style={{ width: '100%', height: '500px', margin: '40px auto 80px', position: 'relative', zIndex: 10 }}>
-      {/* We use basic unlit materials mostly, so we don't need heavy lights. 
-          Using a solid background color on Canvas fixes AdditiveBlending artifacts on DOM. */}
-      <Canvas camera={{ position: [0, 0, 14], fov: 45 }} dpr={[1, 2]}>
-        <color attach="background" args={['#0A0A0C']} />
+      {/* Remove manual background color so it perfectly composites over the DOM starfield */}
+      <Canvas camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <SceneContainer />
       </Canvas>
     </div>
