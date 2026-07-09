@@ -1,7 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshDistortMaterial, Sphere, Icosahedron, QuadraticBezierLine } from '@react-three/drei';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
 // Constants for our 4 agents
@@ -53,7 +52,13 @@ const OrbitingNode = ({ color, radius, speed, offset, reducedMotion }) => {
   return (
     <group ref={ref}>
       <Sphere args={[0.3, 32, 32]}>
-        <meshBasicMaterial color={color} toneMapped={false} />
+        <meshStandardMaterial 
+          color={color} 
+          emissive={color}
+          emissiveIntensity={0.5}
+          roughness={0.2}
+          metalness={0.8}
+        />
       </Sphere>
       
       {/* Animated connection line back to center */}
@@ -121,24 +126,21 @@ const SceneContainer = () => {
 
   return (
     <group ref={groupRef}>
-      {/* Center Core (Orchestrator) */}
-      <Icosahedron args={[1.5, 4]}>
+      {/* Center Core (Orchestrator) - Sleek Liquid Metal */}
+      <Icosahedron args={[1.5, 6]}>
         <MeshDistortMaterial
-          color="#3b3b4f"
+          color="#0f0f1a"
           emissive="#6c5ce7"
           emissiveIntensity={0.2}
-          wireframe={true}
-          distort={reducedMotion ? 0 : 0.4}
-          speed={reducedMotion ? 0 : 2}
-          roughness={0.2}
-          metalness={0.8}
+          wireframe={false}
+          distort={reducedMotion ? 0 : 0.25}
+          speed={reducedMotion ? 0 : 1.5}
+          roughness={0.1}
+          metalness={0.9}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
         />
       </Icosahedron>
-      
-      {/* Inner solid core to give wireframe some body */}
-      <Sphere args={[1.2, 32, 32]}>
-        <meshBasicMaterial color="#0A0A0F" />
-      </Sphere>
 
       {/* Orbiting Agents */}
       <OrbitingNode color={AGENT_COLORS.planner} radius={3.5} speed={0.4} offset={0} reducedMotion={reducedMotion} />
@@ -152,16 +154,15 @@ const SceneContainer = () => {
 export default function AgentSwarmScene() {
   return (
     <div style={{ width: '100%', height: '500px', margin: '40px auto 80px', position: 'relative', zIndex: 10 }}>
-      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
+        {/* Sleeker lighting setup */}
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6c5ce7" />
         
         <SceneContainer />
         
-        <EffectComposer disableNormalPass>
-          <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
-        </EffectComposer>
       </Canvas>
     </div>
   );
