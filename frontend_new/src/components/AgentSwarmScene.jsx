@@ -153,7 +153,6 @@ export default function AgentSwarmScene() {
   return (
     <div style={{ width: '100%', height: '500px', margin: '40px auto 80px', position: 'relative', zIndex: 10 }}>
       <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
-        <color attach="background" args={['transparent']} />
         
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
