@@ -75,7 +75,8 @@ export default function Starfield() {
       ctx.clearRect(0, 0, w, h);
 
       const isHidden = document.hidden;
-      const shouldAnimate = !isHidden && !prefersReducedMotion && !isMobile;
+      // Animate even on mobile, just with fewer stars (already handled in initStars)
+      const shouldAnimate = !isHidden && !prefersReducedMotion;
 
       stars.forEach((star) => {
         // Calculate dynamic opacity
@@ -91,11 +92,18 @@ export default function Starfield() {
           currentOpacity = star.baseOpacity + 0.2;
         }
 
-        // Calculate position
+        // Calculate position (add continuous slow drift + scroll parallax)
         let yPos = star.y;
+        if (shouldAnimate) {
+          // Continuous slow upward drift for all stars
+          star.y = star.y - star.parallaxFactor * 0.2;
+          if (star.y < 0) star.y += h;
+          yPos = star.y;
+        }
+
         if (star.isParallax && !prefersReducedMotion) {
-          // Move opposite to scroll to simulate depth (background moving slower than foreground)
-          yPos = (star.y - scrollY * star.parallaxFactor) % h;
+          // Additional parallax depth on scroll
+          yPos = (yPos - scrollY * star.parallaxFactor) % h;
           if (yPos < 0) yPos += h;
         }
 
