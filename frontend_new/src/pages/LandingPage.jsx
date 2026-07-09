@@ -1,11 +1,7 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { useMouseTilt } from '../hooks/useMouseTilt';
-import Starfield from '../components/Starfield';
-
-const AgentSwarmScene = lazy(() => import('../components/AgentSwarmScene'));
 
 // Reusable animated section component
 const RevealSection = ({ children, style, className }) => {
@@ -40,14 +36,6 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen text-slate-100 flex flex-col relative overflow-hidden">
       
-      {/* Site-wide Ambient Starfield Background */}
-      <Starfield />
-
-      {/* 3D AGENT SWARM BACKGROUND */}
-      <Suspense fallback={null}>
-        <AgentSwarmScene />
-      </Suspense>
-
       {/* Foreground Content Wrapper */}
       <div style={{ position: 'relative', zIndex: 10 }}>
 

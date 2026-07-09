@@ -1,6 +1,9 @@
 import { Outlet, Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useAuth } from '../AuthContext';
+import Starfield from './Starfield';
+
+const AgentSwarmScene = lazy(() => import('./AgentSwarmScene'));
 
 const Layout = () => {
   const [isLight, setIsLight] = useState(false);
@@ -24,7 +27,15 @@ const Layout = () => {
 
   return (
     <div className="app">
-      <header className="header" data-entrance="0">
+      {/* Site-wide Ambient Starfield Background */}
+      <Starfield />
+
+      {/* 3D AGENT SWARM BACKGROUND */}
+      <Suspense fallback={null}>
+        <AgentSwarmScene />
+      </Suspense>
+
+      <header className="header" data-entrance="0" style={{ position: 'relative', zIndex: 10 }}>
         <div className="header-inner">
           <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
             <svg className="logo-svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -64,11 +75,11 @@ const Layout = () => {
         </div>
       </header>
 
-      <div className="content-wrap" style={{ display: 'block' }}>
+      <div className="content-wrap" style={{ display: 'block', position: 'relative', zIndex: 10 }}>
         <Outlet />
       </div>
 
-      <footer className="footer" data-entrance="3">
+      <footer className="footer" data-entrance="3" style={{ position: 'relative', zIndex: 10 }}>
         <span>Built for AMD AI Hackathon</span>
         <span className="footer-dot">·</span>
         <span>Powered by CrewAI + Fireworks AI</span>
