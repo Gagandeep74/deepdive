@@ -120,7 +120,7 @@ body {
 .main { flex: 1; min-width: 0; padding-bottom: 48px; }
 
 /* ---- Header ---- */
-.header { padding: 18px 0; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.header { padding: 18px 0; margin-bottom: 24px; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-name {

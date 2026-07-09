@@ -77,10 +77,7 @@ const LandingPage = () => {
       <div className="ambient-orb hidden md:block" style={{ width: '400px', height: '400px', top: '35%', right: '-10%', backgroundColor: '#06b6d4' }}></div>
       <div className="ambient-orb hidden md:block" style={{ width: '500px', height: '500px', top: '75%', left: '-15%', backgroundColor: '#f59e0b' }}></div>
 
-      {/* Glowing Orb Background at Top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[600px] pointer-events-none overflow-hidden flex justify-center -z-10">
-        <div className="orb" style={{ opacity: 0.6, filter: 'blur(60px)', position: 'absolute', top: '-100px' }}></div>
-      </div>
+
 
       {/* HERO SECTION */}
       <div ref={heroReveal} className="reveal" style={{ textAlign: 'center', marginBottom: '80px', padding: '0 20px', marginTop: '60px' }}>
