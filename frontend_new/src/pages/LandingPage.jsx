@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useMouseTilt } from '../hooks/useMouseTilt';
+import Starfield from '../components/Starfield';
 
 const AgentSwarmScene = lazy(() => import('../components/AgentSwarmScene'));
 
@@ -36,9 +38,39 @@ const LandingPage = () => {
   const heroReveal = useScrollReveal();
 
   return (
-    <div style={{ padding: '40px 0' }}>
-      {/* Background glow orb that doesn't disrupt document flow height */}
-      <div style={{ position: 'relative', width: '100%', height: 0, display: 'flex', justifyContent: 'center', zIndex: -1 }}>
+    <div className="min-h-screen text-slate-100 flex flex-col relative overflow-hidden bg-[#0A0A0F]">
+      
+      {/* Site-wide Ambient Starfield Background */}
+      <Starfield />
+
+      {/* Decorative SVG Connectors */}
+      <svg className="ambient-svg ambient-svg-1 hidden md:block" style={{ top: '25%', left: '5%', width: '300px', height: '300px' }} viewBox="0 0 200 200">
+        <path d="M 10 190 Q 50 10 190 10" fill="none" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="5,5" />
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#6c5ce7" stopOpacity="0" />
+            <stop offset="50%" stopColor="#6c5ce7" stopOpacity="1" />
+            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg className="ambient-svg ambient-svg-2 hidden md:block" style={{ top: '65%', right: '5%', width: '400px', height: '200px' }} viewBox="0 0 400 200">
+        <path d="M 10 10 C 150 200 250 0 390 190" fill="none" stroke="url(#grad2)" strokeWidth="1.5" strokeDasharray="10,5" />
+        <defs>
+          <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0" />
+            <stop offset="50%" stopColor="#10b981" stopOpacity="1" />
+            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Ambient Geometric Orbs */}
+      <div className="ambient-orb hidden md:block" style={{ width: '400px', height: '400px', top: '35%', right: '-10%', backgroundColor: '#06b6d4' }}></div>
+      <div className="ambient-orb hidden md:block" style={{ width: '500px', height: '500px', top: '75%', left: '-15%', backgroundColor: '#f59e0b' }}></div>
+
+      {/* Glowing Orb Background at Top */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[600px] pointer-events-none overflow-hidden flex justify-center -z-10">
         <div className="orb" style={{ opacity: 0.6, filter: 'blur(60px)', position: 'absolute', top: '-100px' }}></div>
       </div>
 
