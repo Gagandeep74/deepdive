@@ -521,3 +521,24 @@ body {
 .reveal-delay-1 { transition-delay: 100ms; }
 .reveal-delay-2 { transition-delay: 200ms; }
 .reveal-delay-3 { transition-delay: 300ms; }
+
+/* ---- 3D Editor Mockup ---- */
+.editor-perspective-container { perspective: 1200px; display: flex; justify-content: center; margin: 60px auto 120px; width: 100%; max-width: 900px; padding: 0 20px; }
+.editor-mockup { width: 100%; max-width: 800px; background: #0E0E12; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: 0 30px 60px -10px rgba(0,0,0,0.8), 0 0 40px rgba(108,92,231,0.2); transform: rotateX(45deg) rotateZ(-15deg) rotateY(15deg); transform-style: preserve-3d; transition: transform 0.5s var(--ease); overflow: hidden; }
+.editor-mockup:hover { transform: rotateX(40deg) rotateZ(-10deg) rotateY(10deg); }
+.editor-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #16161E; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.editor-dots { display: flex; gap: 6px; }
+.editor-dot { width: 10px; height: 10px; border-radius: 50%; }
+.editor-dot.r { background: #FF5F56; }
+.editor-dot.y { background: #FFBD2E; }
+.editor-dot.g { background: #27C93F; }
+.editor-title { font-family: var(--font-m); font-size: 0.75rem; color: var(--text-3); flex: 1; text-align: center; }
+.editor-body { padding: 20px; font-family: var(--font-m); font-size: 0.85rem; color: var(--text-1); line-height: 1.6; display: flex; }
+.editor-lines { color: var(--text-3); text-align: right; padding-right: 16px; user-select: none; border-right: 1px solid rgba(255,255,255,0.05); margin-right: 16px; opacity: 0.5; }
+.editor-code { text-align: left; }
+.token-keyword { color: #C678DD; }
+.token-function { color: #61AFEF; }
+.token-string { color: #98C379; }
+.token-comment { color: #5C6370; font-style: italic; }
+.token-variable { color: #E5C07B; }
+.token-punctuation { color: #ABB2BF; }

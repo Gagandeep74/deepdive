@@ -65,6 +65,42 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* 3D EDITOR MOCKUP */}
+      <div className="editor-perspective-container reveal">
+        <div className="editor-mockup">
+          <div className="editor-header">
+            <div className="editor-dots">
+              <div className="editor-dot r"></div>
+              <div className="editor-dot y"></div>
+              <div className="editor-dot g"></div>
+            </div>
+            <div className="editor-title">agent_crew.py - Visual Studio Code</div>
+            <div style={{ width: '42px' }}></div>
+          </div>
+          <div className="editor-body">
+            <div className="editor-lines">
+              1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13
+            </div>
+            <div className="editor-code">
+              <span className="token-comment"># Initialize the multi-agent research crew</span><br/>
+              <span className="token-keyword">from</span> crewai <span className="token-keyword">import</span> Agent, Crew, Process<br/><br/>
+              
+              <span className="token-comment"># Define specialized agents</span><br/>
+              <span className="token-variable">planner</span> <span className="token-punctuation">=</span> <span className="token-function">Agent</span>(<br/>
+              &nbsp;&nbsp;role<span className="token-punctuation">=</span><span className="token-string">"Research Planner"</span>,<br/>
+              &nbsp;&nbsp;goal<span className="token-punctuation">=</span><span className="token-string">"Break down topics into sub-tasks"</span>,<br/>
+              &nbsp;&nbsp;backstory<span className="token-punctuation">=</span><span className="token-string">"Expert strategist mapping out investigations."</span><br/>
+              )<br/><br/>
+              
+              <span className="token-variable">research_crew</span> <span className="token-punctuation">=</span> <span className="token-function">Crew</span>(<br/>
+              &nbsp;&nbsp;agents<span className="token-punctuation">=</span>[planner, researcher, synthesizer, critic],<br/>
+              &nbsp;&nbsp;process<span className="token-punctuation">=</span>Process.hierarchical<br/>
+              )
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* DOMAIN GRID */}
       <RevealSection style={{ maxWidth: '1000px', margin: '120px auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
