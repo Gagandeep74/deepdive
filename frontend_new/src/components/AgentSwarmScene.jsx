@@ -88,7 +88,7 @@ const GlowSprite = ({ color, scale = 1, opacity = 0.5 }) => {
   );
 };
 
-const ConnectionLine = ({ nodeRef, color, reducedMotion }) => {
+const ConnectionLine = ({ nodeRef, color, reducedMotion, isLightMode }) => {
   const lineRef = useRef();
   const [endPos, setEndPos] = useState(new THREE.Vector3(0, 0, 0));
   
@@ -103,7 +103,7 @@ const ConnectionLine = ({ nodeRef, color, reducedMotion }) => {
     if (lineRef.current && lineRef.current.material && !reducedMotion) {
       lineRef.current.material.dashOffset -= 0.02;
       // Also pulse opacity slightly
-      lineRef.current.material.opacity = 0.3 + Math.sin(clock.getElapsedTime() * 4) * 0.2;
+      lineRef.current.material.opacity = isLightMode ? 0.8 : (0.3 + Math.sin(clock.getElapsedTime() * 4) * 0.2);
     }
   });
 
@@ -113,19 +113,19 @@ const ConnectionLine = ({ nodeRef, color, reducedMotion }) => {
       start={[0, 0, 0]}
       end={endPos}
       mid={[endPos.x / 2, endPos.y / 2 + 1.5, endPos.z / 2]} // Curve upwards
-      color={color}
+      color={isLightMode ? '#94a3b8' : color}
       lineWidth={1.5}
       dashed={true}
       dashScale={1}
       dashSize={0.5}
       gapSize={0.5}
       transparent
-      opacity={0.5}
+      opacity={isLightMode ? 0.8 : 0.5}
     />
   );
 };
 
-const OrbitingNode = ({ color, radius, speed, offset, reducedMotion, name }) => {
+const OrbitingNode = ({ color, radius, speed, offset, reducedMotion, name, isLightMode }) => {
   const ref = useRef();
   const groupRef = useRef();
   
@@ -150,31 +150,35 @@ const OrbitingNode = ({ color, radius, speed, offset, reducedMotion, name }) => 
       <group ref={ref}>
         {/* Solid inner core */}
         <Sphere args={[0.2, 32, 32]}>
-          <meshBasicMaterial color={color} />
+          {isLightMode ? (
+            <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
+          ) : (
+            <meshBasicMaterial color={color} />
+          )}
         </Sphere>
         {/* Wireframe outer shell */}
         <Icosahedron args={[0.35, 1]}>
-          <meshBasicMaterial color={color} wireframe transparent opacity={0.5} />
+          <meshBasicMaterial color={isLightMode ? '#cbd5e1' : color} wireframe transparent opacity={isLightMode ? 0.8 : 0.5} />
         </Icosahedron>
       </group>
       
       {/* Agent Name Label */}
       <Html position={[0, -0.7, 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-        <div style={{ color: color, background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold', textShadow: `0 0 10px ${color}, 0 0 20px ${color}`, letterSpacing: '1px', textTransform: 'uppercase' }}>
+        <div style={{ color: color, background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold', textShadow: isLightMode ? 'none' : `0 0 10px ${color}, 0 0 20px ${color}`, letterSpacing: '1px', textTransform: 'uppercase' }}>
           {name}
         </div>
       </Html>
       
       {/* Agent Glow */}
-      <GlowSprite color={color} scale={0.8} opacity={0.6} />
+      {!isLightMode && <GlowSprite color={color} scale={0.8} opacity={0.6} />}
       
       {/* Connection back to center */}
-      <ConnectionLine nodeRef={groupRef} color={color} reducedMotion={reducedMotion} />
+      <ConnectionLine nodeRef={groupRef} color={color} reducedMotion={reducedMotion} isLightMode={isLightMode} />
     </group>
   );
 };
 
-const SceneContainer = () => {
+const SceneContainer = ({ isLightMode }) => {
   const groupRef = useRef();
   const isTouch = useIsTouchDevice();
   const reducedMotion = usePrefersReducedMotion();
@@ -195,47 +199,54 @@ const SceneContainer = () => {
 
   return (
     <group ref={groupRef}>
+      <ambientLight intensity={isLightMode ? 1.5 : 0.2} />
+      <directionalLight position={[10, 10, 10]} intensity={isLightMode ? 2.5 : 0.5} />
+
       {/* --- CORE --- */}
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
         {/* Outer Wireframe */}
         <Icosahedron args={[1.5, 2]}>
-          <meshBasicMaterial color="#6c5ce7" wireframe transparent opacity={0.2} />
+          <meshBasicMaterial color={isLightMode ? '#e2e8f0' : '#6c5ce7'} wireframe transparent opacity={isLightMode ? 0.6 : 0.2} />
         </Icosahedron>
         
         {/* Inner Solid */}
         <Icosahedron args={[1.2, 3]}>
-          <meshBasicMaterial color="#0A0A0F" />
+          {isLightMode ? (
+            <meshPhysicalMaterial color="#ffffff" metalness={0.1} roughness={0.1} clearcoat={1.0} clearcoatRoughness={0.1} />
+          ) : (
+            <meshBasicMaterial color="#0A0A0F" />
+          )}
         </Icosahedron>
 
         {/* Core Label */}
         <Html position={[0, -2.2, 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <div style={{ color: '#a78bfa', background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold', textShadow: '0 0 10px #a78bfa, 0 0 20px #a78bfa', letterSpacing: '2px', textTransform: 'uppercase' }}>
+          <div style={{ color: isLightMode ? '#475569' : '#a78bfa', background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold', textShadow: isLightMode ? 'none' : '0 0 10px #a78bfa, 0 0 20px #a78bfa', letterSpacing: '2px', textTransform: 'uppercase' }}>
             Orchestrator
           </div>
         </Html>
 
         {/* Core Glow */}
-        <GlowSprite color="#6c5ce7" scale={2.5} opacity={0.4} />
+        {!isLightMode && <GlowSprite color="#6c5ce7" scale={2.5} opacity={0.4} />}
 
         {/* Tech Rings */}
         <Torus args={[2.2, 0.01, 32, 64]} rotation={[Math.PI / 2, 0, 0]}>
-          <meshBasicMaterial color="#a78bfa" transparent opacity={0.15} />
+          <meshBasicMaterial color={isLightMode ? '#cbd5e1' : '#a78bfa'} transparent opacity={isLightMode ? 0.8 : 0.15} />
         </Torus>
         <Torus args={[2.8, 0.01, 32, 64]} rotation={[0, Math.PI / 4, 0]}>
-          <meshBasicMaterial color="#06b6d4" transparent opacity={0.15} />
+          <meshBasicMaterial color={isLightMode ? '#cbd5e1' : '#06b6d4'} transparent opacity={isLightMode ? 0.8 : 0.15} />
         </Torus>
       </Float>
 
       {/* --- AMBIENT PARTICLES --- */}
       {!reducedMotion && (
-        <Sparkles count={200} scale={14} size={2} speed={0.4} opacity={0.2} color="#a78bfa" />
+        <Sparkles count={200} scale={14} size={isLightMode ? 1.5 : 2} speed={0.4} opacity={isLightMode ? 0.6 : 0.2} color={isLightMode ? '#94a3b8' : '#a78bfa'} />
       )}
 
       {/* --- AGENTS --- */}
-      <OrbitingNode name="Planner" color={AGENT_COLORS.planner} radius={4} speed={0.35} offset={0} reducedMotion={reducedMotion} />
-      <OrbitingNode name="Researcher" color={AGENT_COLORS.researcher} radius={5} speed={0.25} offset={Math.PI / 2} reducedMotion={reducedMotion} />
-      <OrbitingNode name="Synthesizer" color={AGENT_COLORS.synthesizer} radius={6} speed={0.15} offset={Math.PI} reducedMotion={reducedMotion} />
-      <OrbitingNode name="Critic" color={AGENT_COLORS.critic} radius={7} speed={0.4} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} />
+      <OrbitingNode name="Planner" color={AGENT_COLORS.planner} radius={4} speed={0.35} offset={0} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Researcher" color={AGENT_COLORS.researcher} radius={5} speed={0.25} offset={Math.PI / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Synthesizer" color={AGENT_COLORS.synthesizer} radius={6} speed={0.15} offset={Math.PI} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Critic" color={AGENT_COLORS.critic} radius={7} speed={0.4} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
     </group>
   );
 };
@@ -251,13 +262,11 @@ export default function AgentSwarmScene() {
       width: '100vw', 
       height: '100vh', 
       zIndex: 0, 
-      pointerEvents: 'none',
-      opacity: isLightMode ? 0.15 : 1,
-      transition: 'opacity 0.5s ease-in-out'
+      pointerEvents: 'none'
     }}>
       {/* Remove manual background color so it perfectly composites over the DOM starfield */}
       <Canvas eventSource={document.body} eventPrefix="client" camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
-        <SceneContainer />
+        <SceneContainer isLightMode={isLightMode} />
       </Canvas>
     </div>
   );
