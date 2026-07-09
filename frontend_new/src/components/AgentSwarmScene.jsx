@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Icosahedron, QuadraticBezierLine, Sparkles, Torus, Float } from '@react-three/drei';
+import { Sphere, Icosahedron, QuadraticBezierLine, Sparkles, Torus, Float, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 const AGENT_COLORS = {
@@ -111,7 +111,7 @@ const ConnectionLine = ({ nodeRef, color, reducedMotion }) => {
   );
 };
 
-const OrbitingNode = ({ color, radius, speed, offset, reducedMotion }) => {
+const OrbitingNode = ({ color, radius, speed, offset, reducedMotion, name }) => {
   const ref = useRef();
   const groupRef = useRef();
   
@@ -143,6 +143,13 @@ const OrbitingNode = ({ color, radius, speed, offset, reducedMotion }) => {
           <meshBasicMaterial color={color} wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
         </Icosahedron>
       </group>
+      
+      {/* Agent Name Label */}
+      <Html position={[0, -0.7, 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+        <div style={{ color: color, fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold', textShadow: `0 0 10px ${color}, 0 0 20px ${color}`, letterSpacing: '1px', textTransform: 'uppercase' }}>
+          {name}
+        </div>
+      </Html>
       
       {/* Agent Glow */}
       <GlowSprite color={color} scale={0.8} opacity={0.6} />
@@ -204,10 +211,10 @@ const SceneContainer = () => {
       )}
 
       {/* --- AGENTS --- */}
-      <OrbitingNode color={AGENT_COLORS.planner} radius={4} speed={0.35} offset={0} reducedMotion={reducedMotion} />
-      <OrbitingNode color={AGENT_COLORS.researcher} radius={5} speed={0.25} offset={Math.PI / 2} reducedMotion={reducedMotion} />
-      <OrbitingNode color={AGENT_COLORS.synthesizer} radius={6} speed={0.15} offset={Math.PI} reducedMotion={reducedMotion} />
-      <OrbitingNode color={AGENT_COLORS.critic} radius={7} speed={0.4} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} />
+      <OrbitingNode name="Planner" color={AGENT_COLORS.planner} radius={4} speed={0.35} offset={0} reducedMotion={reducedMotion} />
+      <OrbitingNode name="Researcher" color={AGENT_COLORS.researcher} radius={5} speed={0.25} offset={Math.PI / 2} reducedMotion={reducedMotion} />
+      <OrbitingNode name="Synthesizer" color={AGENT_COLORS.synthesizer} radius={6} speed={0.15} offset={Math.PI} reducedMotion={reducedMotion} />
+      <OrbitingNode name="Critic" color={AGENT_COLORS.critic} radius={7} speed={0.4} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} />
     </group>
   );
 };
@@ -215,8 +222,10 @@ const SceneContainer = () => {
 export default function AgentSwarmScene() {
   return (
     <div style={{ width: '100%', height: '500px', margin: '40px auto 80px', position: 'relative', zIndex: 10 }}>
-      {/* We use basic unlit materials mostly, so we don't need heavy lights */}
-      <Canvas camera={{ position: [0, 0, 14], fov: 45 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
+      {/* We use basic unlit materials mostly, so we don't need heavy lights. 
+          Using a solid background color on Canvas fixes AdditiveBlending artifacts on DOM. */}
+      <Canvas camera={{ position: [0, 0, 14], fov: 45 }} dpr={[1, 2]}>
+        <color attach="background" args={['#0A0A0C']} />
         <SceneContainer />
       </Canvas>
     </div>

@@ -75,9 +75,9 @@ const LandingPage = () => {
       </div>
 
       {/* HERO SECTION */}
-      <div ref={heroReveal} className="reveal" style={{ textAlign: 'center', marginBottom: '80px', padding: '0 20px' }}>
-        <div style={{ display: 'inline-block', padding: '6px 16px', background: 'var(--glass)', border: '1px solid var(--glass-border)', borderRadius: '20px', fontSize: '0.8rem', color: 'var(--text-2)', marginBottom: '24px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-          One Platform. Every Agent. Every Insight.
+      <div ref={heroReveal} className="reveal" style={{ textAlign: 'center', marginBottom: '80px', padding: '0 20px', marginTop: '60px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'var(--glass)', border: '1px solid var(--glass-border)', borderRadius: '20px', fontSize: '0.8rem', color: 'var(--text-2)', marginBottom: '24px', letterSpacing: '0.05em' }}>
+          <span style={{ color: 'var(--accent-b)' }}>✨</span> Developed by <strong>Gagandeep Singh</strong> & <strong>Mayuresh Gupta</strong>
         </div>
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '20px', background: 'linear-gradient(135deg, var(--text-1) 0%, var(--accent-b) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           Research · Synthesize · Deliver<br/>
