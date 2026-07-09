@@ -514,3 +514,10 @@ body {
     .report-content { background: #fff; color: #000; border: none; padding: 0; }
     .report-content h2 { color: #333; }
 }
+
+/* ---- Scroll Reveal ---- */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 100ms; }
+.reveal-delay-2 { transition-delay: 200ms; }
+.reveal-delay-3 { transition-delay: 300ms; }
