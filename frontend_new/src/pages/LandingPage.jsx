@@ -1,7 +1,9 @@
+import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { useMouseTilt } from '../hooks/useMouseTilt';
+
+const AgentSwarmScene = lazy(() => import('../components/AgentSwarmScene'));
 
 // Reusable animated section component
 const RevealSection = ({ children, style, className }) => {
@@ -32,7 +34,6 @@ const FeatureCard = ({ title, desc, delay, iconColor, icon }) => {
 const LandingPage = () => {
   const { session } = useAuth();
   const heroReveal = useScrollReveal();
-  const tiltRef = useMouseTilt({ max: 15, perspective: 1200, scale: 1.02 });
 
   return (
     <div style={{ padding: '40px 0' }}>
@@ -66,21 +67,16 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* INTERACTIVE 3D IMAGE MOCKUP */}
-      <div className="reveal" style={{ display: 'flex', justifyContent: 'center', margin: '60px auto 120px', padding: '0 20px', width: '100%', maxWidth: '1000px' }}>
-        <div ref={tiltRef} style={{ width: '100%', cursor: 'pointer', transformStyle: 'preserve-3d' }}>
-          <img 
-            src="https://skillvedanth.com/wp-content/uploads/2026/03/vsc.png" 
-            alt="Dashboard Editor Mockup" 
-            style={{ 
-              width: '100%', 
-              height: 'auto', 
-              borderRadius: '16px', 
-              boxShadow: '0 30px 60px -10px rgba(0,0,0,0.8), 0 0 40px rgba(108,92,231,0.15)',
-              display: 'block'
-            }} 
-          />
-        </div>
+      {/* 3D AGENT SWARM CENTERPIECE */}
+      <div className="reveal" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+        <Suspense fallback={
+          <div style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', margin: '40px auto 80px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 1.5s infinite', boxShadow: '0 0 20px var(--accent-glow)' }}></div>
+            <p style={{ color: 'var(--text-3)', fontSize: '0.9rem', marginTop: '16px' }}>Loading Orchestration Visuals...</p>
+          </div>
+        }>
+          <AgentSwarmScene />
+        </Suspense>
       </div>
 
       {/* DOMAIN GRID */}
