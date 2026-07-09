@@ -9,7 +9,6 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.0:8000', // This is standard localhost in python uvicorn
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Backend doesn't expect /api
       },
     },
   },

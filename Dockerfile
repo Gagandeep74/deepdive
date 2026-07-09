@@ -10,7 +10,7 @@
 # ============================================================
 FROM node:20-slim AS frontend-build
 WORKDIR /app
-COPY frontend_new/package*.json ./
+COPY frontend_new/package.json ./
 RUN npm install
 COPY frontend_new/ ./
 RUN npm run build

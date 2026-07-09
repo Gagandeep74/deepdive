@@ -66,7 +66,7 @@ class ResearchRequest(BaseModel):
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
-@app.post("/research")
+@app.post("/api/research")
 async def research(request: Request) -> EventSourceResponse:
     """Launch the multi-agent research pipeline and stream progress via SSE.
 
@@ -163,18 +163,18 @@ async def _error_generator(message: str) -> AsyncGenerator[dict, None]:
     }
 
 
-@app.get("/health")
+@app.get("/api/health")
 async def health() -> dict[str, str]:
     """Lightweight liveness / readiness probe."""
     return {"status": "healthy"}
 
-@app.get("/history")
+@app.get("/api/history")
 async def list_history(request: Request):
     """List past research reports."""
     user_id = request.headers.get("X-User-Id", "")
     return get_history(user_id=user_id)
 
-@app.get("/history/{report_id}")
+@app.get("/api/history/{report_id}")
 async def fetch_report(report_id: str, request: Request):
     """Fetch a specific report and its raw data."""
     user_id = request.headers.get("X-User-Id", "")
