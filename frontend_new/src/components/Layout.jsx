@@ -40,7 +40,6 @@ const Layout = () => {
           </Link>
 
           <nav className="header-nav">
-            <Link to="/pricing" className="nav-pill" style={{ textDecoration: 'none' }}>Pricing</Link>
             <Link to="/docs" className="nav-pill" style={{ textDecoration: 'none' }}>Docs</Link>
             <Link to="/about" className="nav-pill" style={{ textDecoration: 'none' }}>About</Link>
             

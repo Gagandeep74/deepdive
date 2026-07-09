@@ -5,6 +5,19 @@
 # the static frontend assets.
 # ============================================================
 
+# ============================================================
+# Stage 1: Build the React frontend
+# ============================================================
+FROM node:20-slim AS frontend-build
+WORKDIR /app
+COPY frontend_new/package*.json ./
+RUN npm install
+COPY frontend_new/ ./
+RUN npm run build
+
+# ============================================================
+# Stage 2: Build the FastAPI backend
+# ============================================================
 FROM python:3.11-slim
 
 # Prevent Python from buffering stdout/stderr
@@ -19,8 +32,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend code
 COPY backend/app/ ./app/
 
-# Copy frontend into static/ (served by FastAPI)
-COPY frontend_new/dist/ ./static/
+# Copy frontend build from stage 1
+COPY --from=frontend-build /app/dist/ ./static/
 
 # Expose the API port
 EXPOSE 8000

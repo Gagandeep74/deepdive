@@ -9,6 +9,7 @@ const DocsPage = () => {
         <div style={{ position: 'sticky', top: '40px' }}>
           <h4 style={{ fontFamily: 'var(--font-m)', color: 'var(--text-3)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>Contents</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <li><a href="#architecture" style={{ color: 'var(--text-2)', textDecoration: 'none' }}>Agent Architecture</a></li>
             <li><a href="#how-it-works" style={{ color: 'var(--text-2)', textDecoration: 'none' }}>How it Works</a></li>
             <li><a href="#the-agents" style={{ color: 'var(--text-2)', textDecoration: 'none' }}>The 4-Agent Pipeline</a></li>
             <li><a href="#compute-nodes" style={{ color: 'var(--text-2)', textDecoration: 'none' }}>Compute Nodes</a></li>
@@ -21,6 +22,23 @@ const DocsPage = () => {
       <div style={{ flex: 1 }}>
         <h1 style={{ fontFamily: 'var(--font-h)', fontSize: '2.5rem', marginBottom: '40px' }}>Documentation</h1>
 
+        <section id="architecture" style={{ marginBottom: '60px' }}>
+          <h2 style={{ fontFamily: 'var(--font-h)', fontSize: '1.8rem', color: 'var(--accent-b)', marginBottom: '24px' }}>Agent Architecture</h2>
+          <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+            <div style={{ padding: '12px 24px', background: 'rgba(124, 58, 237, 0.2)', border: '1px solid var(--accent-b)', borderRadius: '8px', color: 'var(--text-1)' }}>1. Planner</div>
+            <div style={{ color: 'var(--text-3)' }}>↓</div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <div style={{ padding: '12px 24px', background: 'rgba(6, 182, 212, 0.2)', border: '1px solid #06B6D4', borderRadius: '8px', color: 'var(--text-1)' }}>2. Researcher (A)</div>
+              <div style={{ padding: '12px 24px', background: 'rgba(6, 182, 212, 0.2)', border: '1px solid #06B6D4', borderRadius: '8px', color: 'var(--text-1)' }}>2. Researcher (B)</div>
+              <div style={{ padding: '12px 24px', background: 'rgba(6, 182, 212, 0.2)', border: '1px solid #06B6D4', borderRadius: '8px', color: 'var(--text-1)' }}>2. Researcher (C)</div>
+            </div>
+            <div style={{ color: 'var(--text-3)' }}>↓</div>
+            <div style={{ padding: '12px 24px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10B981', borderRadius: '8px', color: 'var(--text-1)' }}>3. Synthesizer</div>
+            <div style={{ color: 'var(--text-3)' }}>⇅</div>
+            <div style={{ padding: '12px 24px', background: 'rgba(245, 158, 11, 0.2)', border: '1px solid #F59E0B', borderRadius: '8px', color: 'var(--text-1)' }}>4. Critic</div>
+          </div>
+        </section>
+
         <section id="how-it-works" style={{ marginBottom: '60px' }}>
           <h2 style={{ fontFamily: 'var(--font-h)', fontSize: '1.8rem', color: 'var(--accent-b)', marginBottom: '16px' }}>How it Works</h2>
           <p style={{ color: 'var(--text-2)', fontSize: '1.1rem', lineHeight: 1.6 }}>
@@ -31,24 +49,36 @@ const DocsPage = () => {
         <section id="the-agents" style={{ marginBottom: '60px' }}>
           <h2 style={{ fontFamily: 'var(--font-h)', fontSize: '1.8rem', color: 'var(--accent-b)', marginBottom: '24px' }}>The 4-Agent Pipeline</h2>
           
-          <div className="glass-panel" style={{ padding: '24px', marginBottom: '16px' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '8px' }}>1. Planner</h3>
-            <p style={{ color: 'var(--text-2)' }}>Analyzes your topic and formulates distinct, targeted sub-questions to guide the research phase.</p>
+          <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
+            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.4rem', color: 'var(--text-1)', marginBottom: '12px' }}>1. The Planner Agent</h3>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Role:</strong> Strategic breakdown of the user's initial prompt.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Input:</strong> The user's raw research topic and desired depth.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Output:</strong> A JSON array of highly specific sub-questions.</p>
+            <p style={{ color: 'var(--text-2)', lineHeight: 1.5 }}><strong>Handoff:</strong> The Planner's output dictates exactly how many Researcher agents are spawned in the next step.</p>
           </div>
           
-          <div className="glass-panel" style={{ padding: '24px', marginBottom: '16px' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '8px' }}>2. Researchers</h3>
-            <p style={{ color: 'var(--text-2)' }}>A swarm of agents that operate in parallel. Each takes a sub-question, queries the web, scrapes data, and extracts relevant facts and citations.</p>
+          <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
+            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.4rem', color: 'var(--text-1)', marginBottom: '12px' }}>2. The Researcher Swarm</h3>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Role:</strong> Information gathering and citation extraction.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Input:</strong> A single specific sub-question from the Planner.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Output:</strong> A structured list of facts, data points, and their corresponding URL citations.</p>
+            <p style={{ color: 'var(--text-2)', lineHeight: 1.5 }}><strong>Handoff:</strong> Multiple researchers run concurrently using asynchronous tasks. Their results are pooled together and sent to the Synthesizer.</p>
           </div>
           
-          <div className="glass-panel" style={{ padding: '24px', marginBottom: '16px' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '8px' }}>3. Synthesizer</h3>
-            <p style={{ color: 'var(--text-2)' }}>Takes the raw data from all researchers, dededuplicates it, and drafts a cohesive markdown report.</p>
+          <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
+            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.4rem', color: 'var(--text-1)', marginBottom: '12px' }}>3. The Synthesizer Agent</h3>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Role:</strong> Drafting the final markdown report.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Input:</strong> The massive, deduplicated JSON blob of all findings from all researchers.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Output:</strong> A beautifully formatted Markdown document.</p>
+            <p style={{ color: 'var(--text-2)', lineHeight: 1.5 }}><strong>Handoff:</strong> The draft is immediately passed to the Critic before the user is allowed to see it.</p>
           </div>
           
-          <div className="glass-panel" style={{ padding: '24px', marginBottom: '16px' }}>
-            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.2rem', marginBottom: '8px' }}>4. Critic</h3>
-            <p style={{ color: 'var(--text-2)' }}>Reviews the synthesized draft against quality standards. If it lacks citations or flows poorly, it sends the draft back for revision.</p>
+          <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
+            <h3 style={{ fontFamily: 'var(--font-h)', fontSize: '1.4rem', color: 'var(--text-1)', marginBottom: '12px' }}>4. The Critic Agent</h3>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Role:</strong> Quality assurance and fact-checking.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Input:</strong> The Synthesizer's markdown draft.</p>
+            <p style={{ color: 'var(--text-2)', marginBottom: '12px', lineHeight: 1.5 }}><strong>Output:</strong> An approval flag, or a list of demanded revisions.</p>
+            <p style={{ color: 'var(--text-2)', lineHeight: 1.5 }}><strong>Handoff:</strong> If rejected, the draft loops back to the Synthesizer. If approved, the pipeline concludes and the report is delivered to the user dashboard.</p>
           </div>
         </section>
 

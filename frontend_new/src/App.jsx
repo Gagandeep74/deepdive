@@ -3,7 +3,6 @@ import { useAuth } from './AuthContext';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
-import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import DocsPage from './pages/DocsPage';
 import SignInPage from './pages/SignInPage';
@@ -43,7 +42,6 @@ function App() {
         } />
 
         {/* Static Pages */}
-        <Route path="pricing" element={<PricingPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="docs" element={<DocsPage />} />
       </Route>
