@@ -29,6 +29,7 @@ const SignInPage = () => {
             }
           }}
           providers={['google', 'github']}
+          redirectTo="http://localhost:8000/app"
           view="sign_in"
         />
       </div>
