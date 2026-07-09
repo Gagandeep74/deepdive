@@ -193,6 +193,13 @@ const SceneContainer = () => {
           <meshBasicMaterial color="#0A0A0F" />
         </Icosahedron>
 
+        {/* Core Label */}
+        <Html position={[0, -2.2, 0]} center style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <div style={{ color: '#a78bfa', background: 'transparent', padding: 0, margin: 0, fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold', textShadow: '0 0 10px #a78bfa, 0 0 20px #a78bfa', letterSpacing: '2px', textTransform: 'uppercase' }}>
+            Orchestrator
+          </div>
+        </Html>
+
         {/* Core Glow */}
         <GlowSprite color="#6c5ce7" scale={2.5} opacity={0.4} />
 
