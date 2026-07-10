@@ -418,8 +418,8 @@ const Dashboard = () => {
               <h2 className="report-title">Research Report</h2>
               <div className="report-actions">
                 <button className="pill-btn-sm" onClick={copyReport}>⎘ Copy</button>
-                <button className="pill-btn-sm" onClick={exportMarkdown}>↓ .md</button>
-                <button className="pill-btn-sm" onClick={() => window.print()}>⎙ PDF</button>
+                <button className="pill-btn-sm" onClick={exportMarkdown}>↓ Download .md</button>
+                <button className="pill-btn-sm" onClick={() => window.print()}>⎙ Save as PDF</button>
               </div>
             </div>
             {reportProvider && (

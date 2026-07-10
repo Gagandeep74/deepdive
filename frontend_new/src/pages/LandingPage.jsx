@@ -34,7 +34,7 @@ const LandingPage = () => {
   const heroReveal = useScrollReveal();
 
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen w-full text-slate-100 flex flex-col relative overflow-hidden">
       
       {/* Foreground Content Wrapper */}
       <div style={{ position: 'relative', zIndex: 10 }}>

@@ -75,7 +75,7 @@ const Layout = () => {
         </div>
       </header>
 
-      <div className="content-wrap" style={{ display: 'block', position: 'relative', zIndex: 10 }}>
+      <div className="content-wrap" style={{ position: 'relative', zIndex: 10 }}>
         <Outlet />
       </div>
 
