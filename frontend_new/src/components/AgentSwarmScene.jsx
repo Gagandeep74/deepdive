@@ -243,10 +243,10 @@ const SceneContainer = ({ isLightMode }) => {
       )}
 
       {/* --- AGENTS --- */}
-      <OrbitingNode name="Planner" color={AGENT_COLORS.planner} radius={4} speed={0.35} offset={0} reducedMotion={reducedMotion} isLightMode={isLightMode} />
-      <OrbitingNode name="Researcher" color={AGENT_COLORS.researcher} radius={5} speed={0.25} offset={Math.PI / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
-      <OrbitingNode name="Synthesizer" color={AGENT_COLORS.synthesizer} radius={6} speed={0.15} offset={Math.PI} reducedMotion={reducedMotion} isLightMode={isLightMode} />
-      <OrbitingNode name="Critic" color={AGENT_COLORS.critic} radius={7} speed={0.4} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Planner" color={AGENT_COLORS.planner} radius={4} speed={0.2} offset={0} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Researcher" color={AGENT_COLORS.researcher} radius={5.2} speed={0.2} offset={Math.PI / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Synthesizer" color={AGENT_COLORS.synthesizer} radius={6.4} speed={0.2} offset={Math.PI} reducedMotion={reducedMotion} isLightMode={isLightMode} />
+      <OrbitingNode name="Critic" color={AGENT_COLORS.critic} radius={7.6} speed={0.2} offset={(Math.PI * 3) / 2} reducedMotion={reducedMotion} isLightMode={isLightMode} />
     </group>
   );
 };
