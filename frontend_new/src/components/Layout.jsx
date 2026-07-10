@@ -4,8 +4,6 @@ import { useAuth } from '../AuthContext';
 import Starfield from './Starfield';
 
 const AgentSwarmScene = lazy(() => import('./AgentSwarmScene'));
-const AboutScene = lazy(() => import('./AboutScene'));
-const DocsScene = lazy(() => import('./DocsScene'));
 
 const Layout = () => {
   const [isLight, setIsLight] = useState(false);
@@ -33,16 +31,12 @@ const Layout = () => {
       {/* Site-wide Ambient Starfield Background */}
       <Starfield />
 
-      {/* Dynamic 3D Backgrounds based on route */}
-      <Suspense fallback={null}>
-        {location.pathname === '/about' ? (
-          <AboutScene />
-        ) : location.pathname === '/docs' ? (
-          <DocsScene />
-        ) : location.pathname !== '/app' ? (
+      {/* 3D AGENT SWARM BACKGROUND - Hidden on Dashboard to prevent clashing with UI */}
+      <div style={{ display: location.pathname === '/app' ? 'none' : 'block' }}>
+        <Suspense fallback={null}>
           <AgentSwarmScene />
-        ) : null}
-      </Suspense>
+        </Suspense>
+      </div>
 
       <header className="header" data-entrance="0" style={{ position: 'relative', zIndex: 10 }}>
         <div className="header-inner">
