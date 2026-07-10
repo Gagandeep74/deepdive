@@ -209,6 +209,10 @@ body {
     background-repeat: no-repeat; background-position: right 10px center;
     transition: border-color 0.15s;
 }
+.pill-select option {
+    background-color: var(--void-soft);
+    color: var(--text-1);
+}
 .pill-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
 
 .topic-bar { display: flex; gap: 8px; }
