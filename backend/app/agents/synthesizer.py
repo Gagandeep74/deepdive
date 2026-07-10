@@ -62,7 +62,9 @@ async def run_synthesizer(
                 "to source attribution, logical flow, and balanced "
                 "presentation of evidence.  When sources conflict you "
                 "highlight the discrepancy rather than silently choosing a "
-                "side."
+                "side. "
+                "CRITICAL: You must output your response entirely in English, "
+                "regardless of the input language."
             ),
             llm=llm,
             verbose=False,

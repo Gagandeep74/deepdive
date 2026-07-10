@@ -60,7 +60,9 @@ async def run_planner(topic: str, depth: str = "standard") -> list[str]:
                 "sub-question you produce should target a different facet of "
                 "the topic — technical, historical, social, economic, or "
                 "comparative — so that researchers working in parallel can "
-                "cover the full landscape without duplicating effort."
+                "cover the full landscape without duplicating effort. "
+                "CRITICAL: You must output your response entirely in English, "
+                "regardless of the input language."
             ),
             llm=llm,
             verbose=False,

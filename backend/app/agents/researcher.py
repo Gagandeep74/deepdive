@@ -101,7 +101,9 @@ async def run_researcher(sub_question: str) -> dict:
                 "multiple sources and clearly distinguish between established "
                 "facts and emerging opinions.  You cite every source you "
                 "rely on and honestly assess the confidence level of your "
-                "findings."
+                "findings. "
+                "CRITICAL: You must output your response entirely in English, "
+                "regardless of the input language."
             ),
             llm=llm,
             tools=[search_tool],

@@ -42,7 +42,9 @@ async def run_critic(report: str, research_results: list[dict]) -> str:
                 "attribution.  You never let a weak argument slide, but "
                 "you also give credit where it is due.  Your reviews are "
                 "constructive: you identify the problem AND explain what "
-                "would fix it."
+                "would fix it. "
+                "CRITICAL: You must output your response entirely in English, "
+                "regardless of the input language."
             ),
             llm=llm,
             verbose=False,
