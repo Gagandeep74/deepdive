@@ -1,9 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
 
+// Hook to detect light mode
+const useIsLightMode = () => {
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.classList.contains('light-theme'));
+    });
+    setIsLight(document.documentElement.classList.contains('light-theme'));
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+  return isLight;
+};
+
 export default function Starfield() {
   const canvasRef = useRef(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const isLightMode = useIsLightMode();
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -50,19 +65,39 @@ export default function Starfield() {
 
     const initStars = () => {
       stars = [];
-      const numStars = isMobile ? 50 : 120;
+      const numStars = isMobile ? (isLightMode ? 30 : 50) : (isLightMode ? 70 : 120);
       for (let i = 0; i < numStars; i++) {
-        stars.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          size: Math.random() * 1.5 + 0.5,
-          baseOpacity: Math.random() * 0.5 + 0.1, // 0.1 to 0.6
-          twinkleSpeed: Math.random() * 0.02 + 0.005,
-          twinklePhase: Math.random() * Math.PI * 2,
-          isParallax: Math.random() > 0.9, // 10% are parallax
-          parallaxFactor: Math.random() * 0.5 + 0.2, // speed multiplier
-          color: Math.random() > 0.8 ? '#a78bfa' : '#ffffff' // Occasionally violet
-        });
+        if (isLightMode) {
+          // Dust motes for sun effect
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            size: Math.random() * 3 + 1, // larger
+            baseOpacity: Math.random() * 0.3 + 0.05, // softer
+            twinkleSpeed: Math.random() * 0.01 + 0.002, // slower
+            twinklePhase: Math.random() * Math.PI * 2,
+            isParallax: true,
+            parallaxFactor: Math.random() * 0.3 + 0.1, // slower parallax
+            driftX: (Math.random() - 0.5) * 0.2,
+            driftY: (Math.random() - 0.2) * 0.3, // mostly drift down/float
+            color: Math.random() > 0.5 ? '#fcd34d' : '#ffffff' // Amber-ish or white
+          });
+        } else {
+          // Normal stars
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            size: Math.random() * 1.5 + 0.5,
+            baseOpacity: Math.random() * 0.5 + 0.1, // 0.1 to 0.6
+            twinkleSpeed: Math.random() * 0.02 + 0.005,
+            twinklePhase: Math.random() * Math.PI * 2,
+            isParallax: Math.random() > 0.9, // 10% are parallax
+            parallaxFactor: Math.random() * 0.5 + 0.2, // speed multiplier
+            driftX: 0,
+            driftY: -0.2, // strict upward drift
+            color: Math.random() > 0.8 ? '#a78bfa' : '#ffffff' // Occasionally violet
+          });
+        }
       }
     };
 
@@ -74,6 +109,21 @@ export default function Starfield() {
       // Clear canvas
       ctx.clearRect(0, 0, w, h);
 
+      // Draw Sun Effect in Light Mode
+      if (isLightMode) {
+        const sunX = w * 0.8;
+        const sunY = h * 0.2;
+        const sunRadius = Math.max(w, h) * 0.6;
+        
+        const gradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunRadius);
+        gradient.addColorStop(0, 'rgba(251, 191, 36, 0.15)'); // Amber center
+        gradient.addColorStop(0.3, 'rgba(251, 191, 36, 0.05)');
+        gradient.addColorStop(1, 'rgba(251, 191, 36, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+      }
+
       const isHidden = document.hidden;
       // Animate even on mobile, just with fewer stars (already handled in initStars)
       const shouldAnimate = !isHidden && !prefersReducedMotion;
@@ -83,21 +133,25 @@ export default function Starfield() {
         let currentOpacity = star.baseOpacity;
         if (shouldAnimate) {
           star.twinklePhase += star.twinkleSpeed;
-          // Oscillate opacity between base and base + 0.4
-          currentOpacity = star.baseOpacity + Math.sin(star.twinklePhase) * 0.3;
+          // Oscillate opacity between base and base + amplitude
+          currentOpacity = star.baseOpacity + Math.sin(star.twinklePhase) * (isLightMode ? 0.2 : 0.3);
           // Clamp opacity
-          currentOpacity = Math.max(0.05, Math.min(1, currentOpacity));
+          currentOpacity = Math.max(0.02, Math.min(1, currentOpacity));
         } else if (prefersReducedMotion) {
           // Static opacity if reduced motion
-          currentOpacity = star.baseOpacity + 0.2;
+          currentOpacity = star.baseOpacity + (isLightMode ? 0.1 : 0.2);
         }
 
         // Calculate position (add continuous slow drift + scroll parallax)
         let yPos = star.y;
         if (shouldAnimate) {
-          // Continuous slow upward drift for all stars
-          star.y = star.y - star.parallaxFactor * 0.2;
+          star.x = star.x + star.driftX;
+          star.y = star.y + star.driftY * (isLightMode ? 1 : star.parallaxFactor);
+          
           if (star.y < 0) star.y += h;
+          if (star.y > h) star.y -= h;
+          if (star.x < 0) star.x += w;
+          if (star.x > w) star.x -= w;
           yPos = star.y;
         }
 
@@ -110,12 +164,22 @@ export default function Starfield() {
         ctx.beginPath();
         ctx.arc(star.x, yPos, star.size, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
+        
+        if (isLightMode) {
+          // Soft glow for dust motes
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = star.color;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+        
         ctx.globalAlpha = currentOpacity;
         ctx.fill();
       });
 
-      // Always reset alpha
+      // Always reset alpha and shadow
       ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
 
       // Only request next frame if we are allowed to animate
       // If we shouldn't animate, we just draw once and stop the loop,
@@ -138,7 +202,7 @@ export default function Starfield() {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [prefersReducedMotion, isMobile]);
+  }, [prefersReducedMotion, isMobile, isLightMode]);
 
   return (
     <canvas
