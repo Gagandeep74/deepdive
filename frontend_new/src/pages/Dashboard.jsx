@@ -364,6 +364,7 @@ const Dashboard = () => {
           <section className="pipeline-section" data-entrance="2">
             <div className="orb-arena">
               <div className="orb" ref={orbRef}></div>
+              <div className="orb-core"></div>
               <div className="orb-ring"></div>
 
               <div className="orbit-chip" ref={plannerRef} data-state={agents.planner.state}>
