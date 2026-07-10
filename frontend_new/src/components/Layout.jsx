@@ -1,4 +1,4 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useAuth } from '../AuthContext';
 import Starfield from './Starfield';
@@ -8,6 +8,7 @@ const AgentSwarmScene = lazy(() => import('./AgentSwarmScene'));
 const Layout = () => {
   const [isLight, setIsLight] = useState(false);
   const { session, user, signOut } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
     const theme = localStorage.getItem('theme');
@@ -30,10 +31,12 @@ const Layout = () => {
       {/* Site-wide Ambient Starfield Background */}
       <Starfield />
 
-      {/* 3D AGENT SWARM BACKGROUND */}
-      <Suspense fallback={null}>
-        <AgentSwarmScene />
-      </Suspense>
+      {/* 3D AGENT SWARM BACKGROUND - Hidden on Dashboard to prevent clashing with UI */}
+      <div style={{ display: location.pathname === '/app' ? 'none' : 'block' }}>
+        <Suspense fallback={null}>
+          <AgentSwarmScene />
+        </Suspense>
+      </div>
 
       <header className="header" data-entrance="0" style={{ position: 'relative', zIndex: 10 }}>
         <div className="header-inner">
