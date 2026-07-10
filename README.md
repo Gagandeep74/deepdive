@@ -61,12 +61,3 @@ npm run dev
 ```
 
 The application will be available at `http://localhost:5173`.
-
-### Alternative: Run with Docker
-
-If you prefer containerization, you can run the entire stack with Docker:
-
-```bash
-docker compose up --build
-```
-The application will be available at `http://localhost:8000`.
