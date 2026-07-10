@@ -31,8 +31,8 @@ const Layout = () => {
       {/* Site-wide Ambient Starfield Background */}
       <Starfield />
 
-      {/* 3D AGENT SWARM BACKGROUND - Hidden on Dashboard to prevent clashing with UI */}
-      <div style={{ display: location.pathname === '/app' ? 'none' : 'block' }}>
+      {/* 3D AGENT SWARM BACKGROUND - Only show on Landing Page to keep other pages simple and clean */}
+      <div style={{ display: location.pathname === '/' ? 'block' : 'none' }}>
         <Suspense fallback={null}>
           <AgentSwarmScene />
         </Suspense>
