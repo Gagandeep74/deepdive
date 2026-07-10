@@ -138,7 +138,10 @@ body {
 .sidebar {
     width: 200px; flex-shrink: 0;
     padding-right: 16px;
-    border-right: 1px solid var(--glass-border);
+    border-right: 1px solid rgba(255,255,255,0.15);
+}
+html.light-theme .sidebar {
+    border-right: 1px solid rgba(0,0,0,0.15);
 }
 .main { flex: 1; min-width: 0; padding-bottom: 48px; }
 
@@ -564,7 +567,8 @@ body {
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
     .content-wrap { flex-direction: column; }
-    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 0 0 12px; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); padding: 0 0 12px; }
+    html.light-theme .sidebar { border-bottom: 1px solid rgba(0,0,0,0.15); }
     .sidebar-list { max-height: 100px; flex-direction: row; overflow-x: auto; gap: 8px; }
     .config-bar { flex-direction: column; }
     .topic-bar { flex-direction: column; }
