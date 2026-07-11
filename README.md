@@ -75,10 +75,3 @@ npm run dev
 
 The application will be available at `http://localhost:5173` (or `http://localhost:8000` via the backend proxy).
 
----
-
-## 🏆 AMD Compute Hackathon Note
-
-This project was built to take full advantage of AMD compute infrastructure for lightning-fast LLM inference. Deep Dive relies on a custom-hosted `vLLM` inference server on an **AMD Developer Cloud** droplet, serving Llama 3 models via AMD MI300X GPUs. 
-
-*Note: Because our live endpoint is ephemeral to conserve compute resources, the hardcoded tunnel URL may expire. Please refer to our demo video for a complete walkthrough of the pipeline utilizing the AMD GPU cluster!*
