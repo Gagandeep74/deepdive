@@ -8,6 +8,12 @@ WORKDIR /app/frontend_new
 COPY frontend_new/package*.json ./
 RUN npm install
 
+# Pass frontend environment variables into the build process
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+
 # Copy source code and build
 COPY frontend_new/ ./
 RUN npm run build
