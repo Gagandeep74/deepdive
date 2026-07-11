@@ -32,9 +32,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend source code
 COPY backend/ ./backend/
 
-# Copy built frontend assets to the /app/static directory 
+# Copy built frontend assets to the /app/backend/static directory 
 # (This matches the _static_dir logic in backend/app/main.py)
-COPY --from=frontend-builder /app/frontend_new/dist ./static
+COPY --from=frontend-builder /app/frontend_new/dist ./backend/static
 
 # Set environment variables for production
 ENV PYTHONUNBUFFERED=1
