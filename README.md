@@ -1,6 +1,11 @@
 # 🔬 Deep Dive — Multi-Agent AI Research & Report Generation System
 
-**Deep Dive leverages Fireworks AI, which serves high-performance Llama models via AMD Instinct™ MI300X GPUs, ensuring incredibly fast inference for our multi-agent pipeline.**
+> **⚠️ Live Demo & AMD Compute Notice for Judges:**
+> *Because our application relies on a dedicated, custom-hosted vLLM inference server running directly on an AMD Developer Cloud droplet, the live endpoint is ephemeral and shuts down to conserve compute resources.* 
+> *Therefore, the Pinggy tunnel URL hardcoded in `config.py` may be expired at the time of judging.* 
+> *Please see our **Demo Video** for the complete, unedited live demonstration of our application routing traffic directly through our AMD GPU cluster!*
+
+**Deep Dive leverages a completely custom-hosted vLLM server on AMD Developer Cloud, serving Llama 3 models via AMD GPUs, ensuring incredibly fast inference and 100% AMD Compute usage for our multi-agent pipeline.**
 
 Deep Dive takes a research topic and produces a structured, cited report by coordinating four specialized AI agents that work together. 
 
@@ -8,10 +13,10 @@ Deep Dive takes a research topic and produces a structured, cited report by coor
 
 This project is built to take full advantage of AMD compute infrastructure for lightning-fast LLM inference.
 
-- **Compute Provider:** Fireworks AI
-- **Hardware:** AMD Instinct™ MI300X Accelerators
-- **Models Used:** Llama-3 (70B & 8B)
-- **Agent Usage:** The Planner, Researchers, Synthesizer, and Critic agents all rely exclusively on Fireworks AI endpoints backed by AMD hardware for low-latency generation. (See `backend/app/config.py` for verification).
+- **Compute Provider:** AMD Developer Cloud
+- **Hosting Strategy:** Custom `vLLM` Inference Server over SSH Tunnel
+- **Models Used:** `NousResearch/Meta-Llama-3-8B-Instruct`
+- **Agent Usage:** The Planner, Researchers, Synthesizer, and Critic agents all rely exclusively on our custom AMD endpoint. (See `backend/app/config.py` for verification).
 
 ## Architecture
 
@@ -22,15 +27,15 @@ Deep Dive orchestrates four AI agents to automate the research process:
 3. **Synthesizer Agent:** Compiles all findings into a unified, markdown-formatted report.
 4. **Critic Agent:** Reviews the report against the raw findings to check for unsupported claims or hallucinations, forcing a revision if needed.
 
-All agents are explicitly instructed to output in English and enforce strict 30-second execution timeouts.
+All agents are explicitly instructed to output in English and enforce strict 180-second execution timeouts for large workloads.
 
 ## Quick Start
 
 ### Prerequisites
 - Node.js 18+ (for frontend)
 - Python 3.11+ (for backend)
-- [Fireworks AI API Key](https://fireworks.ai/)
 - [Tavily API Key](https://tavily.com/)
+- Custom AMD Server Tunnel (already hardcoded for demo)
 
 ### 1. Clone & Configure
 
@@ -40,15 +45,16 @@ Clone the repository and set up your environment variables:
 cd deep-dive
 cp .env.example .env
 # Edit .env and add your API keys:
-#   FIREWORKS_API_KEY=your-key-here
 #   TAVILY_API_KEY=your-key-here
 ```
 
-### 2. Run Locally (Standard)
+### 2. Run Locally
 
 **Backend:**
 ```bash
 cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```

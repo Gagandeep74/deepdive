@@ -32,11 +32,13 @@ const Layout = () => {
       <Starfield />
 
       {/* 3D AGENT SWARM BACKGROUND - Only show on Landing Page to keep other pages simple and clean */}
-      <div style={{ display: location.pathname === '/' ? 'block' : 'none' }}>
-        <Suspense fallback={null}>
-          <AgentSwarmScene />
-        </Suspense>
-      </div>
+      {location.pathname === '/' && (
+        <div>
+          <Suspense fallback={null}>
+            <AgentSwarmScene />
+          </Suspense>
+        </div>
+      )}
 
       <header className="header" data-entrance="0" style={{ position: 'relative', zIndex: 10 }}>
         <div className="header-inner">

@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../AuthContext';
 import { marked } from 'marked';
 
-// Configure marked to render citations
+// Configure marked to render citations safely for v18
 marked.use({
   renderer: {
-    text(text) {
-      return text.replace(/\[(\d+)\]/g, '<sup><a href="#ref-$1" class="citation">[$1]</a></sup>');
+    text(token) {
+      const content = typeof token === 'string' ? token : (token.text || '');
+      if (typeof content === 'string') {
+        return content.replace(/\[(\d+)\]/g, '<sup><a href="#ref-$1" class="citation">[$1]</a></sup>');
+      }
+      return content;
     }
   }
 });
@@ -281,7 +285,7 @@ const Dashboard = () => {
       setTopic(report.topic);
       setDepth(report.depth);
       setRawResults(report.research_raw_data || []);
-      setReportMarkdown(report.report_markdown);
+      setReportMarkdown(report.report_markdown || '');
       setView('report');
       setError(null);
     } catch (e) {

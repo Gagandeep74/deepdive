@@ -194,7 +194,7 @@ async def fetch_report(report_id: str, request: Request):
 _this_dir = Path(__file__).resolve().parent
 
 # Development: frontend lives alongside backend in the repo.
-_frontend_dir = _this_dir.parent.parent / "frontend" / "dist"
+_frontend_dir = _this_dir.parent.parent / "frontend_new" / "dist"
 
 # Docker / production: frontend assets copied into /app/static/
 # (since WORKDIR is /app, _this_dir is /app/app, so parent is /app)
@@ -208,14 +208,18 @@ elif _static_dir.is_dir():
     app.mount("/", StaticFiles(directory=str(_static_dir), html=True), name="static")
 
 # Special Catch-All for React Router
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse, JSONResponse
 @app.exception_handler(404)
 async def custom_404_handler(request, __):
+    # Do not serve index.html for API or static asset paths
+    if request.url.path.startswith("/api/") or request.url.path.startswith("/assets/"):
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+        
     if _frontend_dir.is_dir():
         return FileResponse(str(_frontend_dir / "index.html"))
     elif _static_dir.is_dir():
         return FileResponse(str(_static_dir / "index.html"))
-    return FileResponse("Not Found", status_code=404)
+    return PlainTextResponse("Not Found", status_code=404)
 
 
 # ---------------------------------------------------------------------------
