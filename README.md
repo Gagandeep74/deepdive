@@ -1,69 +1,83 @@
-# 🔬 Deep Dive — Multi-Agent AI Research & Report Generation System
+# 🔬 Deep Dive
 
-> **⚠️ Live Demo & AMD Compute Notice for Judges:**
-> *Because our application relies on a dedicated, custom-hosted vLLM inference server running directly on an AMD Developer Cloud droplet, the live endpoint is ephemeral and shuts down to conserve compute resources.* 
-> *Therefore, the Pinggy tunnel URL hardcoded in `config.py` may be expired at the time of judging.* 
-> *Please see our **Demo Video** for the complete, unedited live demonstration of our application routing traffic directly through our AMD GPU cluster!*
+> **An Autonomous Multi-Agent Research & Report Generation System**
 
-**Deep Dive leverages a completely custom-hosted vLLM server on AMD Developer Cloud, serving Llama 3 models via AMD GPUs, ensuring incredibly fast inference and 100% AMD Compute usage for our multi-agent pipeline.**
+Deep Dive is an intelligent orchestration system that takes a broad research topic and autonomously produces a structured, cited, and comprehensive Markdown report. It achieves this by coordinating a swarm of specialized AI agents that plan, research, synthesize, and critique in parallel.
 
-Deep Dive takes a research topic and produces a structured, cited report by coordinating four specialized AI agents that work together. 
+---
 
-## AMD Infrastructure
+## ✨ Key Features
 
-This project is built to take full advantage of AMD compute infrastructure for lightning-fast LLM inference.
+- **Parallel Hive-Mind Research:** Spawns multiple web-searching agents simultaneously to cut down research time by up to 90%.
+- **Self-Correcting Critique Loop:** An independent Critic agent reviews the drafted report against raw facts, forcing revisions if claims are unsupported or citations are missing.
+- **Real-time Streaming:** Watch the agents work in real-time with an interactive UI that streams SSE events directly from the backend.
+- **Hardware Optimized:** Designed to leverage custom-hosted vLLM inference servers (e.g., AMD Developer Cloud with MI300X GPUs) for extremely fast parallel context processing.
 
-- **Compute Provider:** AMD Developer Cloud
-- **Hosting Strategy:** Custom `vLLM` Inference Server over SSH Tunnel
-- **Models Used:** `NousResearch/Meta-Llama-3-8B-Instruct`
-- **Agent Usage:** The Planner, Researchers, Synthesizer, and Critic agents all rely exclusively on our custom AMD endpoint. (See `backend/app/config.py` for verification).
+---
 
-## Architecture
+## 🧠 Agent Architecture
 
-Deep Dive orchestrates four AI agents to automate the research process:
+Deep Dive operates using a 4-phase, multi-agent pipeline built on top of CrewAI:
 
-1. **Planner Agent:** Breaks a broad topic down into 3-5 distinct, non-overlapping sub-questions.
-2. **Researcher Agents:** Work in parallel, using Tavily to search the web for each sub-question, extracting facts and citing sources.
-3. **Synthesizer Agent:** Compiles all findings into a unified, markdown-formatted report.
-4. **Critic Agent:** Reviews the report against the raw findings to check for unsupported claims or hallucinations, forcing a revision if needed.
+1. **The Planner (Architect):** Breaks down your broad prompt into 2, 5, or 10 highly specific, non-overlapping sub-questions.
+2. **The Researchers (Hive Mind):** A dynamic swarm of agents where each is assigned exactly one sub-question. They independently scour the web (via Tavily), read articles, and compile raw, factual notes.
+3. **The Synthesizer (Writer):** Stitches together the disjointed notes from all researchers into a single, cohesive, logically flowing Markdown draft.
+4. **The Critic (Editor):** Verifies facts, checks citations, and reviews formatting. If the draft fails quality checks, the Critic rejects it and forces the Synthesizer to rewrite (up to 2 passes).
 
-All agents are explicitly instructed to output in English and enforce strict 180-second execution timeouts for large workloads.
+*(For a detailed sequence diagram, see [WORKFLOW.md](WORKFLOW.md))*
 
-## Quick Start
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ (for frontend)
-- Python 3.11+ (for backend)
-- [Tavily API Key](https://tavily.com/)
-- Custom AMD Server Tunnel (already hardcoded for demo)
+- **Node.js** 18+
+- **Python** 3.11+
+- [Tavily API Key](https://tavily.com/) (For web searching)
+- [Supabase Project](https://supabase.com/) (For Authentication and History)
 
 ### 1. Clone & Configure
 
-Clone the repository and set up your environment variables:
-
 ```bash
-cd deep-dive
+git clone https://github.com/Gagandeep74/deepdive.git
+cd deepdive
+
+# Copy the environment template
 cp .env.example .env
-# Edit .env and add your API keys:
-#   TAVILY_API_KEY=your-key-here
 ```
+Edit the `.env` file and add your `TAVILY_API_KEY` and LLM configurations.
 
-### 2. Run Locally
+### 2. Start the Backend (FastAPI)
 
-**Backend:**
 ```bash
 cd backend
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+
+# Windows
+.\.venv\Scripts\activate
+# Mac/Linux
+source .venv/bin/activate
+
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
-**Frontend:**
+### 3. Start the Frontend (React + Vite)
+
+Open a new terminal window:
+
 ```bash
 cd frontend_new
 npm install
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`.
+The application will be available at `http://localhost:5173` (or `http://localhost:8000` via the backend proxy).
+
+---
+
+## 🏆 AMD Compute Hackathon Note
+
+This project was built to take full advantage of AMD compute infrastructure for lightning-fast LLM inference. Deep Dive relies on a custom-hosted `vLLM` inference server on an **AMD Developer Cloud** droplet, serving Llama 3 models via AMD MI300X GPUs. 
+
+*Note: Because our live endpoint is ephemeral to conserve compute resources, the hardcoded tunnel URL may expire. Please refer to our demo video for a complete walkthrough of the pipeline utilizing the AMD GPU cluster!*
