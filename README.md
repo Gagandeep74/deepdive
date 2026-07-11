@@ -34,6 +34,7 @@ Deep Dive operates using a 4-phase, multi-agent pipeline built on top of CrewAI:
 - **Node.js** 18+
 - **Python** 3.11+
 - [Tavily API Key](https://tavily.com/) (For web searching)
+- [Fireworks AI API Key](https://fireworks.ai/) (For fast LLM inference)
 - [Supabase Project](https://supabase.com/) (For Authentication and History)
 
 ### 1. Clone & Configure
@@ -45,7 +46,7 @@ cd deepdive
 # Copy the environment template
 cp .env.example .env
 ```
-Edit the `.env` file and add your `TAVILY_API_KEY` and LLM configurations.
+Edit the `.env` file and add your `TAVILY_API_KEY`, `FIREWORKS_API_KEY`, and other LLM configurations.
 
 ### 2. Start the Backend (FastAPI)
 
