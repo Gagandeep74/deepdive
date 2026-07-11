@@ -1,0 +1,10 @@
+node_modules/
+backend/.venv/
+.venv/
+data/deepdive.db
+frontend_new/dist/
+frontend_new/node_modules/
+__pycache__/
+*.pyc
+.git/
+.env
