@@ -39,8 +39,6 @@ COPY --from=frontend-builder /app/frontend_new/dist ./static
 # Set environment variables for production
 ENV PYTHONUNBUFFERED=1
 
-# Expose port (Railway overrides this with $PORT)
-EXPOSE 8000
 
 # Start the FastAPI server using the dynamically assigned $PORT (defaulting to 8000)
 CMD ["sh", "-c", "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
